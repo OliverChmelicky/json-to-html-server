@@ -1,0 +1,16 @@
+{
+    "threatName": "Win32/Rbot",
+    "category": "trojan",
+    "size": 437289,
+    "detectionDate": "2019-04-01",
+    "variants": [
+      {
+        "name": "Win32/TrojanProxy.Emotet.A",
+        "dateAdded": "2019-04-10"
+      },
+      {
+        "name": "Win32/TrojanProxy.Emotet.B",
+        "dateAdded": "2019-04-22"
+      }
+    ]
+  }
