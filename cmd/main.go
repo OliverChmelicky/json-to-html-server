@@ -23,22 +23,22 @@ func main() {
 	// Parse and execute the template
 	tmpl, err := template.ParseFiles(templatePath)
 	if err != nil {
-		log.Fatalf("couldd not parse temlate: %s", err)
+		log.Fatalf("couldd not parse temlate: %v", err)
 		return
 	}
 
 	mainPage, err := os.ReadFile(mainHtmlPath)
 	if err != nil {
-		log.Fatalf("error opening file: %s", err)
+		log.Fatalf("error opening file: %v", err)
 		return
 	}
 
-	threadService := pkg.NewThreadService(tmpl, string(mainPage))
+	threadService := pkg.NewThreadService(string(mainPage), tmpl)
 
 	http.HandleFunc("GET /", threadService.HomePage())
-	http.HandleFunc("POST /render", threadService.LoggerMiddleware(threadService.Render()))
+	http.HandleFunc("POST /render", threadService.Render())
 
-	portStr := strconv.Itoa(port)
+	addr := ":" + strconv.Itoa(port)
 	log.Println("Server listens on port: ", port)
-	log.Fatal(http.ListenAndServe(":"+portStr, nil))
+	log.Fatal(http.ListenAndServe(addr, nil))
 }

@@ -1,16 +1,15 @@
 {
-    "threatName": "Win32/Rbot",
-    "category": "trojan",
+    "threatName": "    <script>window.onload = function() {alert('Hello');};</script>",
+    "category": "Trojan (herec)",
     "size": 437289,
-    "detectionDate": "2019-04-01",
     "variants": [
       {
         "name": "Win32/TrojanProxy.Emotet.A",
         "dateAdded": "2019-04-10"
       },
       {
-        "name": "Win32/TrojanProxy.Emotet.B",
-        "dateAdded": "2019-04-22"
+        "name": "Win32/TrojanProxy.Emotet.B"
       }
-    ]
+    ],
+    "random": "this should be ignored"
   }

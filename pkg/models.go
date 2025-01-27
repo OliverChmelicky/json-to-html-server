@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+const dateLayout = "2006-01-02"
+
 type Date time.Time //"2019-04-01"
 
 type Thread struct {
@@ -17,7 +19,7 @@ type Thread struct {
 
 type Variants struct {
 	Name  string `json:"name"`
-	Added Date   `json:"dateAdded"`
+	Added *Date  `json:"dateAdded"`
 }
 
 type HtmlTemplate struct {
@@ -38,35 +40,29 @@ func (template *HtmlTemplate) FromAPI(thread Thread) {
 	template.Category = thread.Category
 	template.Size = thread.Size
 	if thread.DetectionDate != nil {
-		template.DetectionDate = time.Time(*thread.DetectionDate).Format("2006-01-02")
+		template.DetectionDate = time.Time(*thread.DetectionDate).Format(dateLayout)
 	}
 
 	template.Variants = make([]HtmlVariants, len(thread.Variants))
 	for i, v := range thread.Variants {
-		template.Variants[i] = HtmlVariants{
-			Name:  v.Name,
-			Added: time.Time(v.Added).Format("2006-01-02"),
+		variant := HtmlVariants{Name: v.Name}
+		if v.Added != nil {
+			variant.Added = time.Time(*v.Added).Format(dateLayout)
 		}
+
+		template.Variants[i] = variant
 	}
 }
 
-func (cd *Date) UnmarshalJSON(data []byte) error {
+func (d *Date) UnmarshalJSON(data []byte) error {
 	// Remove quotes from the JSON string
-	dateStr := string(data)
-	dateStr = dateStr[1 : len(dateStr)-1]
+	data = data[1 : len(data)-1]
 
-	// Define the layout matching the date format
-	layout := "2006-01-02"
-
-	// Parse the date string
-	parsedTime, err := time.Parse(layout, dateStr)
+	parsedTime, err := time.Parse(dateLayout, string(data))
 	if err != nil {
-		return fmt.Errorf("error parsing date: %v", err)
+		return fmt.Errorf("error parsing date: %w", err)
 	}
 
-	parsedTime.Format("2006-01-02")
-
-	// Assign the parsed time to the CustomDate
-	*cd = Date(parsedTime)
+	*d = Date(parsedTime)
 	return nil
 }
